@@ -5,6 +5,7 @@ using StorageApi.Data;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using StorageApi.DTOs;
 
 namespace StorageApi.Controllers
 {
@@ -14,16 +15,16 @@ namespace StorageApi.Controllers
     {
         private readonly StorageApiContext _context = context;
 
-        // GET: api/Product
+        // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
         {
-            return await _context.Product.ToListAsync();
+            return await _context.Product.Select(p => p.ToProductDto()).ToListAsync();
         }
 
-        // GET: api/Product/5
+        // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
             var product = await _context.Product.FindAsync(id);
 
@@ -32,20 +33,20 @@ namespace StorageApi.Controllers
                 return NotFound();
             }
 
-            return product;
+            return product.ToProductDto();
         }
 
         // PUT: api/Product/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int? id, Product product)
+        public async Task<IActionResult> PutProduct(int? id, UpdateProductDto product)
         {
             if (id != product.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            _context.Entry(product.ToEntity()).State = EntityState.Modified;
 
             try
             {
@@ -69,12 +70,13 @@ namespace StorageApi.Controllers
         // POST: api/Product
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct(CreateProductDto product)
         {
-            _context.Product.Add(product);
+            var entity = product.ToEntity();
+            _context.Product.Add(entity);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            return CreatedAtAction("GetProduct", new { id = entity.Id }, entity);
         }
 
         // DELETE: api/Product/5
