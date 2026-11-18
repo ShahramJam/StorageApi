@@ -4,8 +4,8 @@ namespace StorageApi.DTOs
 {
     public record CreateProductDto
     {
-        
-         
+
+
         [Required]
         [MaxLength(150)]
         public string? Name { get; set; }
@@ -24,4 +24,3 @@ namespace StorageApi.DTOs
 
     }
 }
- 

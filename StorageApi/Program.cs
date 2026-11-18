@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
 using StorageApi.Data;
 
@@ -29,14 +28,14 @@ namespace StorageApi
                            .UseAsyncSeeding((context, _, ct) => DbInitializer.SeedAsync(context, ct));
                 }
             });
- 
+
             builder.Services.AddControllers();
-           
+
             builder.Services.AddOpenApi();
 
             var app = builder.Build();
 
-          //  DatabaseSeeder.Seed(app.Services);
+            //  DatabaseSeeder.Seed(app.Services);
 
             if (app.Environment.IsDevelopment())
             {
@@ -48,7 +47,7 @@ namespace StorageApi
                 app.MapScalarApiReference();
             }
 
-            
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

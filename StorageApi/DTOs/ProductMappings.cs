@@ -4,7 +4,7 @@ namespace StorageApi.DTOs
 {
     public static class ProductMappings
     {
-        
+
         public static ProductDto ToProductDto(this Product product)
         {
             return new ProductDto
@@ -16,7 +16,7 @@ namespace StorageApi.DTOs
             };
         }
 
-       
+
         public static Product ToEntity(this CreateProductDto dto)
         {
             return new Product
@@ -45,4 +45,3 @@ namespace StorageApi.DTOs
         }
     }
 }
- 
