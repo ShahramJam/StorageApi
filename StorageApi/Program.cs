@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using StorageApi.Data;
 
 namespace StorageApi
 {
@@ -9,26 +11,41 @@ namespace StorageApi
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("StorageContext") ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.");
 
-            builder.Services.AddDbContext<StorageContext>(options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<StorageContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
 
-            // Add services to the container.
-
+                if (builder.Environment.IsDevelopment())
+                {
+                    options.UseSeeding((context, _) =>
+                    {
+                        DbInitializer.Seed(context);
+                    })
+                           .UseAsyncSeeding((context, _, ct) => DbInitializer.SeedAsync(context, ct));
+                }
+            });
+ 
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+           
             builder.Services.AddOpenApi();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+          //  DatabaseSeeder.Seed(app.Services);
+
             if (app.Environment.IsDevelopment())
             {
+                using var scope = app.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<StorageContext>();
+                dbContext.Database.Migrate();
+
                 app.MapOpenApi();
             }
 
+            
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
