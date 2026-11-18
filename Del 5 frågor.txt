@@ -1,0 +1,29 @@
+Här är svaren på frågorna under Del 5 Efter Scaffold i uppgiften:
+
+1. Vilka metoder har genererats?
+
+När man scaffoldar en API-controller med Entity Framework skapas en ProductsController med kompletta CRUD-metoder (Create, Read, Update, Delete) samt en hjälpmetod:
+• GetProduct() ([HttpGet]): Hämtar och returnerar en lista med alla produkter från databasen.
+• GetProduct(int id) ([HttpGet("{id}")]): Hämtar en specifik produkt baserat på dess unika ID.
+• PutProduct(int id, Product product) ([HttpPut("{id}")]): Uppdaterar en befintlig produkt i databasen.
+• PostProduct(Product product) ([HttpPost]): Skapar och sparar en ny produkt i databasen.
+• DeleteProduct(int id) ([HttpDelete("{id}")]): Tar bort en specifik produkt från databasen baserat på ID.
+• ProductExists(int id) (privat hjälpmetod): Kontrollerar om en produkt med ett visst ID finns i databasen (används vid uppdateringar).
+
+2. Hur används StorageContext?
+
+StorageContext är projektets databaskontext (ärver från DbContext i Entity Framework Core) och fungerar som bryggan mellan C#-koden och SQL-databasen:
+• Dependency Injection: StorageContext injiceras i ProductsController via dess konstruktor (public ProductsController(StorageContext context)) och sparas i ett privat fält (_context).
+• Läsa data: Genom egenskapen _context.Product (en DbSet<Product>) ställs asynkrona frågor mot databasen, till exempel med .ToListAsync() eller .FindAsync(id).
+• Ändra och spara data: Metoder som .Add(), .Remove() och att ändra EntityState till Modified förbereder ändringar i minnet. Anropet await _context.SaveChangesAsync() översätter sedan dessa ändringar till SQL-kommandon och sparar dem i databasen.
+
+3. Hur fungerar CreatedAtAction, Ok, NotFound osv.?
+
+Dessa är inbyggda hjälpmetoder i ASP.NET Core (från basklassen ControllerBase) som returnerar standardiserade HTTP-statuskoder tillsammans med eventuell JSON-data:
+• Ok(data): Returnerar HTTP-statuskod 200 OK. Används när en förfrågan lyckas och data (t.ex. en lista av produkter eller en enskild produkt) ska skickas tillbaka till klienten.
+• NotFound(): Returnerar HTTP-statuskod 404 Not Found. Används när en efterfrågad resurs inte hittas i databasen, exempelvis om man söker efter eller försöker radera ett ID som inte existerar.
+• CreatedAtAction(...): Returnerar HTTP-statuskod 201 Created när en ny produkt har skapats via POST. Den skickar med den nyskapade produkten i svaret och lägger dessutom till en Location-header med URL:en där den nya produkten kan hämtas (genom att peka på GetProduct-metoden och det nya ID:t).
+• NoContent(): Returnerar HTTP-statuskod 204 No Content. Används vid lyckade PUT- (uppdatering) och DELETE-anrop där operationen gick igenom men ingen ny data behöver skickas tillbaka.
+• BadRequest(): Returnerar HTTP-statuskod 400 Bad Request. Används vid PUT om ID:t i URL:en inte stämmer överens med ID:t i objektet som skickades med i anropet.
+ 
+		

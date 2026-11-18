@@ -1,3 +1,6 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Del 5 frågor.txt" />
+  </Folder>
   <Project Path="StorageApi/StorageApi.csproj" />
 </Solution>
