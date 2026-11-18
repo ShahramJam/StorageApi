@@ -11,7 +11,7 @@ using StorageApi.Data;
 namespace StorageApi.Migrations
 {
     [DbContext(typeof(StorageApiContext))]
-    [Migration("20261118160839_Init")]
+    [Migration("20261118222005_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -59,7 +59,7 @@ namespace StorageApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,10 +6,10 @@ namespace StorageApi.DTOs
     {
         [Range(1, int.MaxValue)]
         public int Id { get; set; }
-        
+
         [Required]
         [MaxLength(150)]
-        public string? Name { get; set; }
+        public string Name { get; set; } = null!;
         [Range(0, int.MaxValue)]
         public int Price { get; set; }
         [Range(0, int.MaxValue)]
