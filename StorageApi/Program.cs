@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Scalar.AspNetCore;
 using StorageApi.Data;
 
 namespace StorageApi
@@ -10,7 +14,7 @@ namespace StorageApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var connectionString = builder.Configuration.GetConnectionString("StorageContext") ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("StorageContext") ?? throw new System.InvalidOperationException("Connection string 'StorageContext' not found.");
 
             builder.Services.AddDbContext<StorageContext>(options =>
             {
@@ -41,6 +45,7 @@ namespace StorageApi
                 dbContext.Database.Migrate();
 
                 app.MapOpenApi();
+                app.MapScalarApiReference();
             }
 
             
