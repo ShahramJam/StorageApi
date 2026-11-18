@@ -1,17 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StorageApi.Models;
+using StorageApi.Data;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace StorageApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController(StorageContext context) : ControllerBase
+    public class ProductsController(StorageApiContext context) : ControllerBase
     {
-        private readonly StorageContext _context = context;
+        private readonly StorageApiContext _context = context;
 
         // GET: api/Product
         [HttpGet]

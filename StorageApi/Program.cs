@@ -14,9 +14,9 @@ namespace StorageApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var connectionString = builder.Configuration.GetConnectionString("StorageContext") ?? throw new System.InvalidOperationException("Connection string 'StorageContext' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("StorageApiContext") ?? throw new System.InvalidOperationException("Connection string 'StorageApiContext' not found.");
 
-            builder.Services.AddDbContext<StorageContext>(options =>
+            builder.Services.AddDbContext<StorageApiContext>(options =>
             {
                 options.UseSqlServer(connectionString);
 
@@ -41,7 +41,7 @@ namespace StorageApi
             if (app.Environment.IsDevelopment())
             {
                 using var scope = app.Services.CreateScope();
-                var dbContext = scope.ServiceProvider.GetRequiredService<StorageContext>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<StorageApiContext>();
                 dbContext.Database.Migrate();
 
                 app.MapOpenApi();

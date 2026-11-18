@@ -20,4 +20,9 @@
     <PackageReference Include="Scalar.AspNetCore" Version="3.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
